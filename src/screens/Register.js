@@ -39,7 +39,8 @@ export default function Register({ navigation }) {
         createdAt: new Date().toISOString(),
       });
     } catch (err) {
-      setError('Failed to register. Email may already be in use.');
+      console.log('Registration Error:', err);
+      setError(err.message || 'Failed to register.');
     } finally {
       setLoading(false);
     }

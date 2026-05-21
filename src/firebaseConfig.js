@@ -1,18 +1,23 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const firebaseConfig = {
-  apiKey: "API_KEY_PLACEHOLDER",
-  authDomain: "scholartrade-placeholder.firebaseapp.com",
-  projectId: "scholartrade-placeholder",
-  storageBucket: "scholartrade-placeholder.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef123456"
+  apiKey: "AIzaSyCZGUeRQ_a2h6ilnW85yHIhBFQqWjdnWU4",
+  authDomain: "scholar-trade.firebaseapp.com",
+  projectId: "scholar-trade",
+  storageBucket: "scholar-trade.firebasestorage.app",
+  messagingSenderId: "1075025471466",
+  appId: "1:1075025471466:android:dbffe180a65ca0cb537493"
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage)
+});
+
 const db = getFirestore(app);
 
 export { auth, db };
