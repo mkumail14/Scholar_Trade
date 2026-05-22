@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { collection, addDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { AuthContext } from '../context/AuthContext';
@@ -17,28 +17,40 @@ export default function ProductDetails({ route, navigation }) {
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
-  const handleBuyNow = async () => {
+  const handleBuyNow = () => {
     if (!user) return;
-    setLoading(true);
-    try {
-      await deleteDoc(doc(db, 'listings', item.id));
-      await addDoc(collection(db, 'transactions'), {
-        ...item,
-        buyerId: user.uid,
-        sellerId: item.sellerId,
-        transactionDate: new Date().toISOString(),
-      });
-      navigation.navigate('MainTabs', { screen: 'Marketplace' });
-    } catch (error) {
-      console.log('Transaction Error:', error);
-      setLoading(false);
-    }
+    Alert.alert(
+      "Confirm Purchase",
+      `Are you sure you want to buy "${item.title}" for Rs. ${item.price}?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Confirm", 
+          onPress: async () => {
+            setLoading(true);
+            try {
+              await deleteDoc(doc(db, 'listings', item.id));
+              await addDoc(collection(db, 'transactions'), {
+                ...item,
+                buyerId: user.uid,
+                sellerId: item.sellerId,
+                transactionDate: new Date().toISOString(),
+              });
+              navigation.navigate('MainTabs', { screen: 'Marketplace' });
+            } catch (error) {
+              console.log('Transaction Error:', error);
+              setLoading(false);
+            }
+          } 
+        }
+      ]
+    );
   };
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.imagePlaceholder}>
-        <Ionicons name={getCategoryIcon(item.category)} size={80} color="#E91E63" />
+        <Ionicons name={getCategoryIcon(item.category)} size={80} color="#2D3748" />
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{item.title}</Text>
@@ -63,53 +75,58 @@ export default function ProductDetails({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF0F5',
+    backgroundColor: '#F2F4F7',
   },
   imagePlaceholder: {
     height: 300,
-    backgroundColor: '#FFF0F5',
+    backgroundColor: '#E2E8F0',
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   infoContainer: {
     padding: 20,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#2D3748',
     marginBottom: 10,
   },
   price: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#E91E63',
+    color: '#2D3748',
     marginBottom: 10,
   },
   category: {
     fontSize: 16,
-    color: '#666',
+    color: '#718096',
     marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: '#2D3748',
     marginBottom: 10,
   },
   description: {
     fontSize: 16,
-    color: '#555',
+    color: '#4A5568',
     lineHeight: 24,
   },
   actionContainer: {
     padding: 20,
+    backgroundColor: '#FFFFFF',
+    marginTop: 10,
   },
   buyButton: {
-    backgroundColor: '#E91E63',
+    backgroundColor: '#2D3748',
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
   },
   buttonText: {

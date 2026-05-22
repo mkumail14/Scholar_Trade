@@ -24,7 +24,7 @@ export default function Register({ navigation }) {
     if (!email) {
       setError("Email is required.");
       return;
-    } else if (!email.endsWith("@szabist.pk")) {
+    } else if (!email.endsWith("@szabist.pk") && email !== "admin@szabist.edu") {
       setError("A valid SZABIST email is required.");
       return;
     } else if (!password) {
@@ -106,29 +106,29 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    backgroundColor: "#FFF0F5",
+    backgroundColor: "#F2F4F7",
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
     marginBottom: 40,
     textAlign: "center",
-    color: "#E91E63",
+    color: "#2D3748",
   },
   input: {
     height: 50,
-    backgroundColor: "#fff",
+    backgroundColor: "#EDF2F7",
     borderWidth: 1,
     borderColor: "#ddd",
-    borderRadius: 8,
+    borderRadius: 12,
     paddingHorizontal: 15,
     marginBottom: 15,
     fontSize: 16,
   },
   button: {
     height: 50,
-    backgroundColor: "#E91E63",
-    borderRadius: 8,
+    backgroundColor: "#2D3748",
+    borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   link: {
     marginTop: 20,
-    color: "#E91E63",
+    color: "#2D3748",
     textAlign: "center",
     fontSize: 16,
   },

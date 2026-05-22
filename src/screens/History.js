@@ -64,7 +64,7 @@ export default function History({ navigation }) {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#E91E63" />
+        <ActivityIndicator size="large" color="#C2185B" />
       </View>
     );
   }
@@ -86,7 +86,7 @@ export default function History({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF0F5',
+    backgroundColor: '#F2F4F7',
   },
   loaderContainer: {
     flex: 1,
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   headerContainer: {
-    backgroundColor: '#E91E63',
+    backgroundColor: '#2D3748',
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 6,
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 15,
     marginBottom: 10,
     shadowColor: '#000',
@@ -119,27 +119,29 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
   },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#E91E63',
+    color: '#2D3748',
     marginBottom: 5,
   },
   price: {
     fontSize: 15,
-    color: '#E91E63',
+    color: '#2D3748',
     fontWeight: '600',
     marginBottom: 5,
   },
   date: {
     fontSize: 14,
-    color: '#888',
+    color: '#718096',
   },
   emptyText: {
     textAlign: 'center',
     marginTop: 50,
     fontSize: 16,
-    color: '#666',
+    color: '#718096',
   },
 });

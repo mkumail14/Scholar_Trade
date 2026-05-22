@@ -25,6 +25,12 @@ export default function Profile({ navigation }) {
         </TouchableOpacity>
       </View>
 
+      {user?.email === 'admin@szabist.edu' && (
+        <TouchableOpacity style={styles.adminButton} onPress={() => navigation.navigate('AdminDashboard')}>
+          <Text style={styles.adminText}>Open Admin Dashboard</Text>
+        </TouchableOpacity>
+      )}
+
       <TouchableOpacity style={styles.logoutButton} onPress={logout}>
         <Text style={styles.logoutText}>Log Out</Text>
       </TouchableOpacity>
@@ -35,7 +41,7 @@ export default function Profile({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF0F5',
+    backgroundColor: '#F2F4F7',
   },
   header: {
     backgroundColor: '#fff',
@@ -48,7 +54,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#E91E63',
+    backgroundColor: '#2D3748',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
@@ -61,7 +67,7 @@ const styles = StyleSheet.create({
   emailText: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#E91E63',
+    color: '#2D3748',
   },
   optionsContainer: {
     marginTop: 20,
@@ -83,13 +89,28 @@ const styles = StyleSheet.create({
   logoutButton: {
     marginTop: 30,
     marginHorizontal: 20,
-    backgroundColor: '#E91E63',
+    backgroundColor: '#2D3748',
     paddingVertical: 15,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
   },
   logoutText: {
     color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  adminButton: {
+    marginTop: 20,
+    marginHorizontal: 20,
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 15,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#2D3748',
+  },
+  adminText: {
+    color: '#2D3748',
     fontSize: 16,
     fontWeight: 'bold',
   },

@@ -10,6 +10,7 @@ import ProductDetails from '../screens/ProductDetails';
 import MyListings from '../screens/MyListings';
 import History from '../screens/History';
 import TabNavigator from './TabNavigator';
+import AdminDashboard from '../screens/AdminDashboard';
 import { ActivityIndicator, View } from 'react-native';
 
 const Stack = createNativeStackNavigator();
@@ -35,6 +36,7 @@ export default function RootNavigator() {
           <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: true, title: 'Details' }} />
           <Stack.Screen name="MyListings" component={MyListings} options={{ headerShown: true, title: 'My Listings' }} />
           <Stack.Screen name="History" component={History} options={{ headerShown: true, title: 'Purchase History' }} />
+          <Stack.Screen name="AdminDashboard" component={AdminDashboard} options={{ headerShown: true, title: 'Admin Dashboard' }} />
         </>
       ) : (
         <>

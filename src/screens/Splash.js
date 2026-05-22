@@ -12,7 +12,7 @@ export default function Splash({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ScholarTrade</Text>
-      <ActivityIndicator size="large" color="#E91E63" style={styles.loader} />
+      <ActivityIndicator size="large" color="#2D3748" style={styles.loader} />
     </View>
   );
 }
@@ -20,14 +20,14 @@ export default function Splash({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF0F5',
+    backgroundColor: '#F2F4F7',
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
     fontSize: 40,
     fontWeight: 'bold',
-    color: '#E91E63',
+    color: '#2D3748',
     marginBottom: 20,
   },
   loader: {

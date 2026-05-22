@@ -130,41 +130,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#FFF0F5',
+    backgroundColor: '#F2F4F7',
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#E91E63',
+    color: '#2D3748',
     textAlign: 'center',
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: '#EDF2F7',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 12,
     paddingHorizontal: 15,
     paddingVertical: 12,
     marginBottom: 15,
     fontSize: 16,
   },
   dropdownButton: {
-    backgroundColor: '#fff',
+    backgroundColor: '#EDF2F7',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 12,
     paddingHorizontal: 15,
     paddingVertical: 15,
     marginBottom: 15,
     justifyContent: 'center',
   },
   dropdownPlaceholder: {
-    color: '#999',
+    color: '#718096',
     fontSize: 16,
   },
   dropdownButtonText: {
-    color: '#333',
+    color: '#2D3748',
     fontSize: 16,
   },
   textArea: {
@@ -172,9 +172,9 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#E91E63',
+    backgroundColor: '#2D3748',
     paddingVertical: 15,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
   },
   buttonText: {
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 15,
     textAlign: 'center',
-    color: '#E91E63',
+    color: '#2D3748',
   },
   categoryItem: {
     paddingVertical: 15,
@@ -213,14 +213,14 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 16,
-    color: '#333',
+    color: '#2D3748',
     textAlign: 'center',
   },
   closeModalButton: {
     marginTop: 15,
     paddingVertical: 12,
-    backgroundColor: '#757575',
-    borderRadius: 8,
+    backgroundColor: '#718096',
+    borderRadius: 12,
     alignItems: 'center',
   },
   closeModalText: {

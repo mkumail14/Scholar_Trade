@@ -12,8 +12,8 @@ export default function TabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: true,
-        tabBarActiveTintColor: '#E91E63',
-        tabBarInactiveTintColor: '#757575',
+        tabBarActiveTintColor: '#2D3748',
+        tabBarInactiveTintColor: '#A0AEC0',
         tabBarStyle: { backgroundColor: '#FFFFFF' },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;

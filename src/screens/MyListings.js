@@ -44,7 +44,7 @@ export default function MyListings({ navigation }) {
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <View style={styles.imagePlaceholder}>
-        <Ionicons name={getCategoryIcon(item.category)} size={40} color="#E91E63" />
+        <Ionicons name={getCategoryIcon(item.category)} size={40} color="#2D3748" />
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title} numberOfLines={1}>{item.title}</Text>
@@ -85,7 +85,7 @@ export default function MyListings({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF0F5',
+    backgroundColor: '#F2F4F7',
   },
   loaderContainer: {
     flex: 1,
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 15,
     marginBottom: 15,
     flexDirection: 'row',
@@ -108,11 +108,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
   },
   imagePlaceholder: {
     width: 60,
     height: 60,
-    backgroundColor: '#FFF0F5',
+    backgroundColor: '#E2E8F0',
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -125,39 +127,39 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#E91E63',
+    color: '#2D3748',
     marginBottom: 5,
   },
   price: {
     fontSize: 15,
-    color: '#E91E63',
+    color: '#2D3748',
     fontWeight: '600',
   },
   actionContainer: {
     flexDirection: 'row',
   },
   editButton: {
-    backgroundColor: '#FFF0F5',
+    backgroundColor: '#FFFFFF',
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 6,
     marginRight: 8,
     borderWidth: 1,
-    borderColor: '#E91E63',
+    borderColor: '#2D3748',
   },
   editText: {
-    color: '#E91E63',
+    color: '#2D3748',
     fontWeight: 'bold',
     fontSize: 14,
   },
   deleteButton: {
-    backgroundColor: '#ffe5e5',
+    backgroundColor: '#E2E8F0',
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 6,
   },
   deleteText: {
-    color: '#E91E63',
+    color: '#2D3748',
     fontWeight: 'bold',
     fontSize: 14,
   },
@@ -165,6 +167,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 50,
     fontSize: 16,
-    color: '#666',
+    color: '#718096',
   },
 });
