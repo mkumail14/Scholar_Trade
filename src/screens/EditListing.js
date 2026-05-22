@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Modal, FlatList } from 'react-native';
-import { collection, addDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { AuthContext } from '../context/AuthContext';
 
@@ -10,17 +10,19 @@ const CATEGORIES = [
   'Handwritten Notes & Lab Coats',
 ];
 
-export default function AddListing({ navigation }) {
+export default function EditListing({ route, navigation }) {
+  const { item } = route.params;
   const { user } = useContext(AuthContext);
-  const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
+
+  const [title, setTitle] = useState(item.title || '');
+  const [price, setPrice] = useState(item.price ? String(item.price) : '');
+  const [description, setDescription] = useState(item.description || '');
+  const [category, setCategory] = useState(item.category || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleAddListing = async () => {
+  const handleUpdateListing = async () => {
     setError('');
 
     if (!title || !price || !description || !category) {
@@ -29,24 +31,23 @@ export default function AddListing({ navigation }) {
     }
 
     if (!user) {
-      setError('You must be logged in to post.');
+      setError('You must be logged in to edit.');
       return;
     }
 
     setLoading(true);
     try {
-      await addDoc(collection(db, 'listings'), {
+      await updateDoc(doc(db, 'listings', item.id), {
         title,
         price: parseFloat(price),
         description,
         category,
-        sellerId: user.uid,
-        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
       navigation.goBack();
     } catch (err) {
       console.log(err);
-      setError('Failed to add listing. Please try again.');
+      setError('Failed to update listing. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -66,7 +67,7 @@ export default function AddListing({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Add New Listing</Text>
+      <Text style={styles.header}>Edit Listing</Text>
       {error ? <Text style={styles.error}>{error}</Text> : null}
       
       <TextInput
@@ -98,8 +99,8 @@ export default function AddListing({ navigation }) {
         numberOfLines={4}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleAddListing} disabled={loading}>
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Post Listing</Text>}
+      <TouchableOpacity style={styles.button} onPress={handleUpdateListing} disabled={loading}>
+        {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Update Listing</Text>}
       </TouchableOpacity>
 
       <Modal

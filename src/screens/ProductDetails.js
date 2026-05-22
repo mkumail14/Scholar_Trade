@@ -1,25 +1,59 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { collection, addDoc, doc, deleteDoc } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
+import { AuthContext } from '../context/AuthContext';
+import { Ionicons } from '@expo/vector-icons';
+
+const getCategoryIcon = (category) => {
+  if (category === 'Textbooks') return 'book';
+  if (category === 'Electronics/Calculators') return 'calculator';
+  if (category === 'Handwritten Notes & Lab Coats') return 'document-text';
+  return 'pricetag-outline';
+};
 
 export default function ProductDetails({ route, navigation }) {
   const { item } = route.params;
+  const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+
+  const handleBuyNow = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      await deleteDoc(doc(db, 'listings', item.id));
+      await addDoc(collection(db, 'transactions'), {
+        ...item,
+        buyerId: user.uid,
+        sellerId: item.sellerId,
+        transactionDate: new Date().toISOString(),
+      });
+      navigation.navigate('MainTabs', { screen: 'Marketplace' });
+    } catch (error) {
+      console.log('Transaction Error:', error);
+      setLoading(false);
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.imagePlaceholder} />
+      <View style={styles.imagePlaceholder}>
+        <Ionicons name={getCategoryIcon(item.category)} size={80} color="#E91E63" />
+      </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.price}>${item.price}</Text>
+        <Text style={styles.price}>Rs. {item.price}</Text>
         <Text style={styles.category}>Category: {item.category}</Text>
         <Text style={styles.sectionTitle}>Description</Text>
         <Text style={styles.description}>{item.description}</Text>
       </View>
       <View style={styles.actionContainer}>
-        <TouchableOpacity style={styles.cartButton}>
-          <Text style={styles.buttonText}>Add to Cart</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.messageButton}>
-          <Text style={styles.buttonText}>Message Seller</Text>
+        <TouchableOpacity style={styles.buyButton} onPress={handleBuyNow} disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Buy Now</Text>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -29,12 +63,14 @@ export default function ProductDetails({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF0F5',
   },
   imagePlaceholder: {
     height: 300,
-    backgroundColor: '#ddd',
+    backgroundColor: '#FFF0F5',
     width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   infoContainer: {
     padding: 20,
@@ -48,7 +84,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#28A745',
+    color: '#E91E63',
     marginBottom: 10,
   },
   category: {
@@ -69,28 +105,16 @@ const styles = StyleSheet.create({
   },
   actionContainer: {
     padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
-  cartButton: {
-    flex: 1,
-    backgroundColor: '#007BFF',
+  buyButton: {
+    backgroundColor: '#E91E63',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginRight: 10,
-  },
-  messageButton: {
-    flex: 1,
-    backgroundColor: '#6c757d',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginLeft: 10,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

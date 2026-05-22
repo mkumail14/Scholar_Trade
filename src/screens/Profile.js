@@ -17,17 +17,11 @@ export default function Profile({ navigation }) {
       </View>
 
       <View style={styles.optionsContainer}>
-        <TouchableOpacity style={styles.optionButton}>
+        <TouchableOpacity style={styles.optionButton} onPress={() => navigation.navigate('MyListings')}>
           <Text style={styles.optionText}>My Listings</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.optionButton}>
+        <TouchableOpacity style={styles.optionButton} onPress={() => navigation.navigate('History')}>
           <Text style={styles.optionText}>Purchase History</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.optionButton}>
-          <Text style={styles.optionText}>Saved Items</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.optionButton}>
-          <Text style={styles.optionText}>Account Settings</Text>
         </TouchableOpacity>
       </View>
 
@@ -41,7 +35,7 @@ export default function Profile({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#FFF0F5',
   },
   header: {
     backgroundColor: '#fff',
@@ -54,7 +48,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#007BFF',
+    backgroundColor: '#E91E63',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
@@ -67,7 +61,7 @@ const styles = StyleSheet.create({
   emailText: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: '#E91E63',
   },
   optionsContainer: {
     marginTop: 20,
@@ -89,7 +83,7 @@ const styles = StyleSheet.create({
   logoutButton: {
     marginTop: 30,
     marginHorizontal: 20,
-    backgroundColor: '#dc3545',
+    backgroundColor: '#E91E63',
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',

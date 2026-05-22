@@ -1,46 +1,57 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../firebaseConfig';
-import { doc, setDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { auth, db } from "../firebaseConfig";
 
 export default function Register({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    setError('');
+    setError("");
 
     if (!email) {
-      setError('Email is required.');
+      setError("Email is required.");
       return;
-    } else if (!email.endsWith('.edu')) {
-      setError('A valid .edu campus email is required.');
+    } else if (!email.endsWith("@szabist.pk")) {
+      setError("A valid SZABIST email is required.");
       return;
     } else if (!password) {
-      setError('Password is required.');
+      setError("Password is required.");
       return;
     } else if (password.length <= 6) {
-      setError('Password must be greater than 6 characters.');
+      setError("Password must be greater than 6 characters.");
       return;
     } else if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      setError("Passwords do not match.");
       return;
     }
 
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await setDoc(doc(db, 'users', userCredential.user.uid), {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      await setDoc(doc(db, "users", userCredential.user.uid), {
         email: email,
         createdAt: new Date().toISOString(),
       });
     } catch (err) {
-      console.log('Registration Error:', err);
-      setError(err.message || 'Failed to register.');
+      console.log("Registration Error:", err);
+      setError(err.message || "Failed to register.");
     } finally {
       setLoading(false);
     }
@@ -72,10 +83,18 @@ export default function Register({ navigation }) {
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.button} onPress={handleRegister} disabled={loading}>
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Register</Text>}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleRegister}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.buttonText}>Register</Text>
+        )}
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
         <Text style={styles.link}>Already have an account? Login here.</Text>
       </TouchableOpacity>
     </View>
@@ -86,21 +105,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
+    justifyContent: "center",
+    backgroundColor: "#FFF0F5",
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 40,
-    textAlign: 'center',
-    color: '#333',
+    textAlign: "center",
+    color: "#E91E63",
   },
   input: {
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
     paddingHorizontal: 15,
     marginBottom: 15,
@@ -108,26 +127,26 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 50,
-    backgroundColor: '#28A745',
+    backgroundColor: "#E91E63",
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 10,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   link: {
     marginTop: 20,
-    color: '#007BFF',
-    textAlign: 'center',
+    color: "#E91E63",
+    textAlign: "center",
     fontSize: 16,
   },
   error: {
-    color: 'red',
+    color: "red",
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

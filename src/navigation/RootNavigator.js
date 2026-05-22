@@ -5,7 +5,10 @@ import Splash from '../screens/Splash';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import AddListing from '../screens/AddListing';
+import EditListing from '../screens/EditListing';
 import ProductDetails from '../screens/ProductDetails';
+import MyListings from '../screens/MyListings';
+import History from '../screens/History';
 import TabNavigator from './TabNavigator';
 import { ActivityIndicator, View } from 'react-native';
 
@@ -28,7 +31,10 @@ export default function RootNavigator() {
         <>
           <Stack.Screen name="MainTabs" component={TabNavigator} />
           <Stack.Screen name="AddListing" component={AddListing} options={{ headerShown: true, title: 'New Listing' }} />
+          <Stack.Screen name="EditListing" component={EditListing} options={{ headerShown: true, title: 'Edit Listing' }} />
           <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: true, title: 'Details' }} />
+          <Stack.Screen name="MyListings" component={MyListings} options={{ headerShown: true, title: 'My Listings' }} />
+          <Stack.Screen name="History" component={History} options={{ headerShown: true, title: 'Purchase History' }} />
         </>
       ) : (
         <>
