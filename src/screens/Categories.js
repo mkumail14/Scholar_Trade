@@ -1,13 +1,22 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-
-const CATEGORIES = [
-  'Textbooks',
-  'Electronics/Calculators',
-  'Handwritten Notes & Lab Coats',
-];
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
 
 export default function Categories({ navigation }) {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'categories'), (snapshot) => {
+      const data = snapshot.docs.map((doc) => doc.data().name);
+      setCategories(data);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.itemContainer}
@@ -19,17 +28,21 @@ export default function Categories({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={CATEGORIES}
-        keyExtractor={(item) => item}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContainer}
-        ListHeaderComponent={
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>Academic Categories</Text>
-          </View>
-        }
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#2D3748" style={{ marginTop: 50 }} />
+      ) : (
+        <FlatList
+          data={categories}
+          keyExtractor={(item) => item}
+          renderItem={renderItem}
+          contentContainerStyle={styles.listContainer}
+          ListHeaderComponent={
+            <View style={styles.headerContainer}>
+              <Text style={styles.headerText}>All Available Categories</Text>
+            </View>
+          }
+        />
+      )}
     </View>
   );
 }

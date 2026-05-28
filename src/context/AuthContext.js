@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     let unsubscribeDoc = null;
+
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         unsubscribeDoc = onSnapshot(doc(db, 'users', currentUser.uid), (docSnap) => {

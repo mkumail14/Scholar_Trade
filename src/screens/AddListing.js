@@ -1,14 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Modal, FlatList } from 'react-native';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { AuthContext } from '../context/AuthContext';
-
-const CATEGORIES = [
-  'Textbooks',
-  'Electronics/Calculators',
-  'Handwritten Notes & Lab Coats',
-];
 
 export default function AddListing({ navigation }) {
   const { user } = useContext(AuthContext);
@@ -19,6 +13,18 @@ export default function AddListing({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'categories'), (snapshot) => {
+      const data = snapshot.docs.map((doc) => doc.data().name);
+      setCategories(data);
+      setLoadingCategories(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleAddListing = async () => {
     setError('');
@@ -111,11 +117,16 @@ export default function AddListing({ navigation }) {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalHeader}>Select a Category</Text>
-            <FlatList
-              data={CATEGORIES}
-              keyExtractor={(item) => item}
-              renderItem={renderCategoryItem}
-            />
+            {loadingCategories ? (
+              <ActivityIndicator size="small" color="#2D3748" />
+            ) : (
+              <FlatList
+                data={categories}
+                keyExtractor={(item) => item}
+                renderItem={renderCategoryItem}
+                ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: 20 }}>No categories available.</Text>}
+              />
+            )}
             <TouchableOpacity style={styles.closeModalButton} onPress={() => setModalVisible(false)}>
               <Text style={styles.closeModalText}>Cancel</Text>
             </TouchableOpacity>

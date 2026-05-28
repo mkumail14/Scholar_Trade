@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Alert } from 'react-native';
-import { collection, onSnapshot, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Alert, TextInput } from 'react-native';
+import { collection, onSnapshot, doc, deleteDoc, updateDoc, addDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { AuthContext } from '../context/AuthContext';
 
@@ -10,8 +10,11 @@ export default function AdminDashboard({ navigation }) {
   
   const [users, setUsers] = useState([]);
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [newCategory, setNewCategory] = useState('');
 
   // Security guard check
   useEffect(() => {
@@ -39,9 +42,19 @@ export default function AdminDashboard({ navigation }) {
       setLoadingProducts(false);
     });
 
+    const unsubscribeCategories = onSnapshot(collection(db, 'categories'), (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCategories(data);
+      setLoadingCategories(false);
+    });
+
     return () => {
       unsubscribeUsers();
       unsubscribeProducts();
+      unsubscribeCategories();
     };
   }, []);
 
@@ -60,6 +73,27 @@ export default function AdminDashboard({ navigation }) {
       await deleteDoc(doc(db, 'listings', productId));
     } catch (err) {
       console.log('Error deleting product:', err);
+    }
+  };
+
+  const handleAddCategory = async () => {
+    if (!newCategory.trim()) return;
+    try {
+      await addDoc(collection(db, 'categories'), {
+        name: newCategory.trim(),
+        createdAt: new Date().toISOString(),
+      });
+      setNewCategory('');
+    } catch (err) {
+      console.log('Error adding category:', err);
+    }
+  };
+
+  const handleDeleteCategory = async (categoryId) => {
+    try {
+      await deleteDoc(doc(db, 'categories', categoryId));
+    } catch (err) {
+      console.log('Error deleting category:', err);
     }
   };
 
@@ -93,6 +127,17 @@ export default function AdminDashboard({ navigation }) {
     </View>
   );
 
+  const renderCategoryItem = ({ item }) => (
+    <View style={styles.card}>
+      <View style={styles.cardInfo}>
+        <Text style={styles.cardTitle}>{item.name}</Text>
+      </View>
+      <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteCategory(item.id)}>
+        <Text style={styles.deleteText}>Delete</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.tabContainer}>
@@ -100,18 +145,24 @@ export default function AdminDashboard({ navigation }) {
           style={[styles.tab, activeTab === 'users' && styles.activeTab]}
           onPress={() => setActiveTab('users')}
         >
-          <Text style={[styles.tabText, activeTab === 'users' && styles.activeTabText]}>Manage Users</Text>
+          <Text style={[styles.tabText, activeTab === 'users' && styles.activeTabText]}>Users</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'products' && styles.activeTab]}
           onPress={() => setActiveTab('products')}
         >
-          <Text style={[styles.tabText, activeTab === 'products' && styles.activeTabText]}>Manage Products</Text>
+          <Text style={[styles.tabText, activeTab === 'products' && styles.activeTabText]}>Products</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'categories' && styles.activeTab]}
+          onPress={() => setActiveTab('categories')}
+        >
+          <Text style={[styles.tabText, activeTab === 'categories' && styles.activeTabText]}>Categories</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.listContainer}>
-        {activeTab === 'users' ? (
+        {activeTab === 'users' && (
           loadingUsers ? (
             <ActivityIndicator size="large" color="#2D3748" style={styles.loader} />
           ) : (
@@ -122,7 +173,8 @@ export default function AdminDashboard({ navigation }) {
               ListEmptyComponent={<Text style={styles.emptyText}>No users found.</Text>}
             />
           )
-        ) : (
+        )}
+        {activeTab === 'products' && (
           loadingProducts ? (
             <ActivityIndicator size="large" color="#2D3748" style={styles.loader} />
           ) : (
@@ -133,6 +185,31 @@ export default function AdminDashboard({ navigation }) {
               ListEmptyComponent={<Text style={styles.emptyText}>No active listings found.</Text>}
             />
           )
+        )}
+        {activeTab === 'categories' && (
+          <View style={{ flex: 1 }}>
+            <View style={styles.addCategoryContainer}>
+              <TextInput
+                style={styles.addCategoryInput}
+                placeholder="New Category Name"
+                value={newCategory}
+                onChangeText={setNewCategory}
+              />
+              <TouchableOpacity style={styles.addButton} onPress={handleAddCategory}>
+                <Text style={styles.addButtonText}>Add</Text>
+              </TouchableOpacity>
+            </View>
+            {loadingCategories ? (
+              <ActivityIndicator size="large" color="#2D3748" style={styles.loader} />
+            ) : (
+              <FlatList
+                data={categories}
+                keyExtractor={(item) => item.id}
+                renderItem={renderCategoryItem}
+                ListEmptyComponent={<Text style={styles.emptyText}>No categories found.</Text>}
+              />
+            )}
+          </View>
         )}
       </View>
     </View>
@@ -221,5 +298,31 @@ const styles = StyleSheet.create({
     marginTop: 50,
     fontSize: 16,
     color: '#718096',
+  },
+  addCategoryContainer: {
+    flexDirection: 'row',
+    marginBottom: 15,
+  },
+  addCategoryInput: {
+    flex: 1,
+    backgroundColor: '#EDF2F7',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    marginRight: 10,
+    fontSize: 16,
+  },
+  addButton: {
+    backgroundColor: '#2D3748',
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
